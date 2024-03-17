@@ -8,9 +8,7 @@ import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UsersService {
 
-    constructor(@InjectRepository(User) private readonly usersRepository: Repository<User>) {
-
-    }
+    constructor(@InjectRepository(User) private readonly usersRepository: Repository<User>) { }
 
     async createUser(createUserDto: CreateUserDTO): Promise<User> {
         const existingUser = await this.usersRepository.findOne({
@@ -32,8 +30,8 @@ export class UsersService {
 
     async findByUsername(username: string): Promise<User> {
 
-        if(!username.length) {
-            return null;    
+        if (!username.length) {
+            return null;
         }
 
         const user = await this.usersRepository.findOne({

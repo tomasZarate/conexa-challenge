@@ -1,7 +1,8 @@
 import { DataSource, DataSourceOptions } from "typeorm";
+import { ConfigService } from '@nestjs/config';
 
 //TOOD: Move this harcoded to configService
-export const dataSourceOptions = () : DataSourceOptions => ({
+export const dataSourceOptions = (configService: ConfigService) : DataSourceOptions => ({
     type: 'postgres',
     host: 'localhost',
     port: 5432,
@@ -13,6 +14,6 @@ export const dataSourceOptions = () : DataSourceOptions => ({
     synchronize: true,
 })
 
-const dataSource = new DataSource(dataSourceOptions())
+const dataSource = new DataSource(dataSourceOptions(new ConfigService()))
 
 export default dataSource
