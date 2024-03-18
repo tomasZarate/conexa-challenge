@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { CreateUserDTO } from '../users/dtos/create-user.dto';
 import { validate } from 'class-validator';
 import { SignInDTO } from './dtos/signin.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('auth')
 @Controller('')
@@ -12,6 +12,7 @@ export class AuthController {
     constructor(private authService: AuthService) { }
 
     @Post('/login')
+    @ApiOperation({ summary: 'Login' })
     async login(@Body() signInDTO: SignInDTO): Promise<string> {
         const user = await this.authService.validateUser(signInDTO)
 
@@ -25,6 +26,7 @@ export class AuthController {
     }
 
     @Post('register')
+    @ApiOperation({ summary: 'Register' })
     async register(@Body() newUser: CreateUserDTO) {
         if (!newUser.username || !newUser.password) {
             throw new Error('Invalid user data');
