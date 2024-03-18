@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, Table } from "typeorm";
+/* import { MigrationInterface, QueryRunner, Table } from "typeorm";
 
 export class AddMoviesTable1710711636517 implements MigrationInterface {
 
@@ -84,3 +84,4 @@ export class AddMoviesTable1710711636517 implements MigrationInterface {
         queryRunner.dropTable('movies', true)
     }
 }
+ */

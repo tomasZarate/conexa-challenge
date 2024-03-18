@@ -33,7 +33,7 @@ export class AddUsersTable1710601402851 implements MigrationInterface {
                 {
                     name: "role",
                     type: "varchar",
-                    default: "regular"
+                    default: "'REGULAR'"
                 },
             ]
         }))

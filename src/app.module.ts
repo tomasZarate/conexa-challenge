@@ -1,14 +1,13 @@
 import { Module, ValidationPipe } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { dataSourceOptions } from './database/data-source';
 import { AuthModule } from './auth/auth.module';
 import { UsersService } from './users/users.service';
 import { UsersModule } from './users/users.module';
 import { AuthService } from './auth/auth.service';
-import { APP_FILTER, APP_GUARD, APP_PIPE } from '@nestjs/core';
+import { APP_PIPE } from '@nestjs/core';
 import { MoviesModule } from './movies/movies.module';
-import { RolesGuard } from './auth/guards/roles.guard';
+import { dataSourceOptions } from './database/data-source';
 
 @Module({
   imports: [
@@ -18,7 +17,7 @@ import { RolesGuard } from './auth/guards/roles.guard';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => dataSourceOptions(configService)
+      useFactory: () => dataSourceOptions()
     }),
     AuthModule,
     UsersModule,
