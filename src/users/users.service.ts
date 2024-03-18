@@ -41,6 +41,10 @@ export class UsersService {
         return user;
     }
 
+    async findUserById(id: number): Promise<User> {
+        return this.usersRepository.findOne({where: {id}})
+    }
+
     validatePassword(inputPassword: string, hashedPassword: string): Promise<Boolean> {
         return bcrypt.compare(inputPassword, hashedPassword)
     }

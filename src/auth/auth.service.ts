@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateUserDTO } from '../users/dtos/create-user.dto';
 import { UsersService } from '../users/users.service';
-import { User } from 'src/users/entities/user.entity';
+import { User } from '../users/entities/user.entity';
 import { SignInDTO } from './dtos/signin.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -28,7 +28,7 @@ export class AuthService {
         const getUser = await this.usersService.findByUsername(user.username)
         const payload = {
             role: getUser.role,
-            sub: getUser.id
+            sub: getUser.id,
         }
 
         return {

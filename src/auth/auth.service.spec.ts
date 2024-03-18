@@ -3,8 +3,9 @@ import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDTO } from '../users/dtos/create-user.dto';
-import { User } from 'src/users/entities/user.entity';
-import { SignInDTO } from './dtos/signin.dto';
+import { User } from '../users/entities/user.entity';
+import { UserRole } from '../constants/roles.enum';
+import { ConfigService } from '@nestjs/config';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -15,6 +16,7 @@ describe('AuthService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,
+        ConfigService,        
         {
           provide: UsersService,
           useValue: {
@@ -54,7 +56,7 @@ describe('AuthService', () => {
         password: 'password123',
         created_at: new Date(),
         edited_at: new Date(),
-        role: 'REGULAR',
+        role: UserRole.REGULAR,
       };
 
       jest.spyOn(usersService, 'createUser').mockResolvedValue(createdUser);
@@ -86,7 +88,7 @@ describe('AuthService', () => {
         password: 'hashedPassword',
         created_at: new Date(),
         edited_at: new Date(),
-        role: 'REGULAR',
+        role: UserRole.REGULAR,
       };
 
       const tokenPayload = {

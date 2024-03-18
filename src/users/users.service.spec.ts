@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { HttpException, HttpStatus } from '@nestjs/common';
+import { UserRole } from '../constants/roles.enum';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -29,6 +30,10 @@ describe('UsersService', () => {
     userRepository = module.get<Repository<User>>(USER_REPOSITORY_TOKEN);
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
@@ -47,7 +52,7 @@ describe('UsersService', () => {
         password: 'password123',
         created_at: newDate,
         edited_at: newDate,
-        role: 'regular'
+        role: UserRole.REGULAR
       })
 
       jest.
@@ -90,7 +95,7 @@ describe('UsersService', () => {
         password: 'hashedPassword',
         created_at: new Date(),
         edited_at: new Date(),
-        role: 'regular'
+        role: UserRole.REGULAR
       };
 
       jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce(existingUser);
@@ -119,7 +124,7 @@ describe('UsersService', () => {
         password: 'hashedPassword',
         created_at: new Date(),
         edited_at: new Date(),
-        role: 'regular'
+        role: UserRole.REGULAR
       };
 
       jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce(expectedUser);

@@ -8,6 +8,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SignInDTO } from './dtos/signin.dto';
+import { UserRole } from '../constants/roles.enum';
 
 describe('AuthController', () => {
   let authController: AuthController;
@@ -23,7 +24,7 @@ describe('AuthController', () => {
           id: 1,
           username: 'testuser',
           password: 'hashedpassword',
-          role: 'REGULAR',
+          role: UserRole.REGULAR,
         };
       }
       return null;
@@ -67,6 +68,10 @@ describe('AuthController', () => {
     usersService = module.get<UsersService>(UsersService);
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   describe('register', () => {
     it('should register new user with valid data', async () => {
       const newUser: CreateUserDTO = {
@@ -80,7 +85,7 @@ describe('AuthController', () => {
         password: newUser.password,
         created_at: new Date(),
         edited_at: new Date(),
-        role: 'regular',
+        role: UserRole.REGULAR,
       };
 
       jest.spyOn(authService, 'registerUser').mockResolvedValueOnce(registeredUser);
@@ -107,7 +112,7 @@ describe('AuthController', () => {
         password: 'password123',
         created_at: new Date(),
         edited_at: new Date(),
-        role: 'regular',
+        role: UserRole.REGULAR,
       };
       jest.spyOn(authService, 'validateUser').mockResolvedValue(mockUser);
 

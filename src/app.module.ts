@@ -6,8 +6,9 @@ import { AuthModule } from './auth/auth.module';
 import { UsersService } from './users/users.service';
 import { UsersModule } from './users/users.module';
 import { AuthService } from './auth/auth.service';
-import { APP_FILTER, APP_PIPE } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { MoviesModule } from './movies/movies.module';
+import { RolesGuard } from './auth/guards/roles.guard';
 
 @Module({
   imports: [

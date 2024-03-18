@@ -3,8 +3,9 @@ import { MoviesService } from './movies.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { CreateMovieDTO } from './dtos/create-movie.dto';
 import { Movie } from './entities/movie.entity';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { UpdateMovieDTO } from './dtos/update-movie.dto';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 describe('MoviesService', () => {
   let service: MoviesService;
@@ -25,6 +26,7 @@ describe('MoviesService', () => {
             update: jest.fn(),
             create: jest.fn(),
             save: jest.fn(),
+            delete: jest.fn(),
           },
         },
       ],
@@ -61,7 +63,6 @@ describe('MoviesService', () => {
         vehicles: ['AT-ST Walker'],
         created_at: nowDate,
         edited_at: nowDate
-
       }, {
         id: 2,
         director: 'George Lucas',
@@ -175,7 +176,7 @@ describe('MoviesService', () => {
 
   describe('updateMovie', () => {
 
-    const existingMovie = {
+    const existingMovie: Movie = {
       id: 1,
       director: 'George Lucas',
       episode_id: 4,
@@ -214,6 +215,42 @@ describe('MoviesService', () => {
     });
   });
 
+  describe('deleteMovie', () => {
+    it('should delete a movie successfully', async () => {
+      const movieId = 1;
+      const movie: Movie = {
+        id: 1,
+        director: 'George Lucas',
+        episode_id: 4,
+        opening_crawl: 'It is a period of civil war.....',
+        planets: ['Tatooine', 'Alderaan'],
+        producer: 'Gary Kurtz, Rick McCallum',
+        release_date: '1977-05-25',
+        characters: ['Luke Skywalker'],
+        species: ['Human', 'Wookiee'],
+        starships: ['Millennium Falcon'],
+        title: 'Star Wars',
+        url: 'https://swapi.dev/api/films/1/',
+        vehicles: ['AT-ST Walker'],
+        created_at: nowDate,
+        edited_at: nowDate
+      };
 
+      jest.spyOn(repository, 'findOne').mockResolvedValueOnce(movie);
+
+      jest.spyOn(repository, 'delete').mockResolvedValueOnce({ affected: 1 } as DeleteResult);
+
+      const result = await service.deleteMovie(movieId);
+      expect(result).toEqual({ affected: 1 });
+    });
+
+    it('should throw an error if movie is not found', async () => {
+      const movieId = 1;
+
+      jest.spyOn(repository, 'findOne').mockResolvedValueOnce(null);
+
+      await expect(service.deleteMovie(movieId)).rejects.toThrowError(new HttpException('Movie not found', HttpStatus.NOT_FOUND));
+    });
+  });
 
 });

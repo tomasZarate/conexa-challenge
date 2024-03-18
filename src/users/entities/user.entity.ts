@@ -20,6 +20,6 @@ export class User {
     @UpdateDateColumn()
     edited_at: Date
 
-    @Column({ type: 'varchar', default: UserRole.Regular })
-    role: string
+    @Column({ type: 'varchar', default: UserRole.REGULAR })
+    role: UserRole;
 }
