@@ -10,10 +10,7 @@ describe('RolesGuard', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        RolesGuard,
-        Reflector,
-      ],
+      providers: [RolesGuard, Reflector],
     }).compile();
 
     guard = module.get<RolesGuard>(RolesGuard);
@@ -32,7 +29,9 @@ describe('RolesGuard', () => {
     } as any;
 
     const requiredRoles = [UserRole.ADMIN];
-    jest.spyOn(reflector, 'getAllAndOverride').mockReturnValueOnce(requiredRoles);
+    jest
+      .spyOn(reflector, 'getAllAndOverride')
+      .mockReturnValueOnce(requiredRoles);
 
     const canActivate = await guard.canActivate(contextMock);
     expect(canActivate).toBe(true);
@@ -50,7 +49,9 @@ describe('RolesGuard', () => {
     } as any;
 
     const requiredRoles = [UserRole.ADMIN];
-    jest.spyOn(reflector, 'getAllAndOverride').mockReturnValueOnce(requiredRoles);
+    jest
+      .spyOn(reflector, 'getAllAndOverride')
+      .mockReturnValueOnce(requiredRoles);
 
     const canActivate = await guard.canActivate(contextMock);
     expect(canActivate).toBe(false);

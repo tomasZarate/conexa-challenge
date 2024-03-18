@@ -1,25 +1,31 @@
-import { Exclude } from "class-transformer";
-import { UserRole } from "../../constants/roles.enum";
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Exclude } from 'class-transformer';
+import { UserRole } from '../../constants/roles.enum';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
-@Entity({ name: "users" })
+@Entity({ name: 'users' })
 export class User {
-    @PrimaryGeneratedColumn()
-    id: number
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    username: string
+  @Column()
+  username: string;
 
-    @Exclude()
-    @Column()
-    password: string
+  @Exclude()
+  @Column()
+  password: string;
 
-    @CreateDateColumn()
-    created_at: Date
+  @CreateDateColumn()
+  created_at: Date;
 
-    @UpdateDateColumn()
-    edited_at: Date
+  @UpdateDateColumn()
+  edited_at: Date;
 
-    @Column({ type: 'varchar', default: UserRole.REGULAR })
-    role: UserRole;
+  @Column({ type: 'varchar', default: UserRole.REGULAR })
+  role: UserRole;
 }

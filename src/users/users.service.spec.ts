@@ -16,14 +16,17 @@ describe('UsersService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [UsersService, {
-        provide: USER_REPOSITORY_TOKEN,
-        useValue: {
-          create: jest.fn(),
-          save: jest.fn(),
-          findOne: jest.fn(),
-        }
-      }],
+      providers: [
+        UsersService,
+        {
+          provide: USER_REPOSITORY_TOKEN,
+          useValue: {
+            create: jest.fn(),
+            save: jest.fn(),
+            findOne: jest.fn(),
+          },
+        },
+      ],
     }).compile();
 
     service = module.get<UsersService>(UsersService);
@@ -40,7 +43,7 @@ describe('UsersService', () => {
 
   it('userRepository should be defined', () => {
     expect(userRepository).toBeDefined();
-  })
+  });
 
   describe('createUser', () => {
     it('should create a new user', async () => {
@@ -52,26 +55,24 @@ describe('UsersService', () => {
         password: 'password123',
         created_at: newDate,
         edited_at: newDate,
-        role: UserRole.REGULAR
-      })
+        role: UserRole.REGULAR,
+      });
 
-      jest.
-        spyOn(bcrypt, 'hash').
-        mockReturnValueOnce('hashedPassword')
+      jest.spyOn(bcrypt, 'hash').mockReturnValueOnce('hashedPassword');
 
       const userDto: CreateUserDTO = {
         username: 'testuser1',
         password: 'password123',
       };
 
-      const createdUser = await service.createUser(userDto);
+      await service.createUser(userDto);
 
       expect(userRepository.create).toHaveBeenCalledWith({
         username: 'testuser1',
         password: 'hashedPassword',
-      })
-      expect(bcrypt.hash).toHaveBeenCalledWith('password123', 10)
-    })
+      });
+      expect(bcrypt.hash).toHaveBeenCalledWith('password123', 10);
+    });
 
     it('should throw error when provided with invalid userDto', async () => {
       const invalidUserDto: CreateUserDTO = {
@@ -87,7 +88,6 @@ describe('UsersService', () => {
       }
     });
 
-
     it('should throw error when trying to create a user with an existing username', async () => {
       const existingUser = {
         id: 2,
@@ -95,7 +95,7 @@ describe('UsersService', () => {
         password: 'hashedPassword',
         created_at: new Date(),
         edited_at: new Date(),
-        role: UserRole.REGULAR
+        role: UserRole.REGULAR,
       };
 
       jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce(existingUser);
@@ -113,7 +113,7 @@ describe('UsersService', () => {
         expect(error.getStatus()).toBe(HttpStatus.CONFLICT);
       }
     });
-  })
+  });
 
   describe('findByUsername', () => {
     it('should find the user by name', async () => {
@@ -124,7 +124,7 @@ describe('UsersService', () => {
         password: 'hashedPassword',
         created_at: new Date(),
         edited_at: new Date(),
-        role: UserRole.REGULAR
+        role: UserRole.REGULAR,
       };
 
       jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce(expectedUser);
@@ -145,19 +145,24 @@ describe('UsersService', () => {
     it('should handle errors', async () => {
       const username = 'testuser1';
 
-      jest.spyOn(userRepository, 'findOne').mockRejectedValueOnce(new Error('Database error'));
+      jest
+        .spyOn(userRepository, 'findOne')
+        .mockRejectedValueOnce(new Error('Database error'));
 
-      await expect(service.findByUsername(username)).rejects.toThrowError('Database error');
+      await expect(service.findByUsername(username)).rejects.toThrowError(
+        'Database error',
+      );
     });
 
     it('should handle invalid input', async () => {
       const username = '';
 
-      jest.spyOn(userRepository, 'findOne').mockRejectedValueOnce(new Error('findOne should not be called'));
+      jest
+        .spyOn(userRepository, 'findOne')
+        .mockRejectedValueOnce(new Error('findOne should not be called'));
 
       const foundUser = await service.findByUsername(username);
       expect(foundUser).toBeNull();
     });
-
-  })
+  });
 });

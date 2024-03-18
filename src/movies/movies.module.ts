@@ -10,6 +10,6 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 @Module({
   imports: [TypeOrmModule.forFeature([Movie]), UsersModule],
   controllers: [MoviesController],
-  providers: [MoviesService, AuthGuard, RolesGuard]
+  providers: [MoviesService, AuthGuard, RolesGuard],
 })
-export class MoviesModule { }
+export class MoviesModule {}

@@ -17,19 +17,20 @@ import { dataSourceOptions } from './database/data-source';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: () => dataSourceOptions()
+      useFactory: () => dataSourceOptions(),
     }),
     AuthModule,
     UsersModule,
     MoviesModule,
   ],
   controllers: [],
-  providers: [UsersService, AuthService,
+  providers: [
+    UsersService,
+    AuthService,
     {
       provide: APP_PIPE,
       useClass: ValidationPipe,
     },
   ],
 })
-
-export class AppModule { }
+export class AppModule {}

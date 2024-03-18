@@ -5,14 +5,14 @@ import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  
+
   app.setGlobalPrefix('api/v1');
 
   app.useGlobalPipes(new ValidationPipe());
 
-  const reflector = app.get(Reflector)
+  const reflector = app.get(Reflector);
 
-  app.useGlobalInterceptors(new ClassSerializerInterceptor(reflector))
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(reflector));
 
   const config = new DocumentBuilder()
     .setTitle('Conexa challenge API')

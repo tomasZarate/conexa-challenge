@@ -13,7 +13,6 @@ import { UserRole } from '../constants/roles.enum';
 describe('AuthController', () => {
   let authController: AuthController;
   let authService: AuthService;
-  let usersService: UsersService;
 
   const USER_REPOSITORY_TOKEN = getRepositoryToken(User);
 
@@ -31,7 +30,7 @@ describe('AuthController', () => {
     }),
     createUser: jest.fn(),
   };
-  
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
@@ -39,7 +38,7 @@ describe('AuthController', () => {
         AuthService,
         {
           provide: UsersService,
-          useValue: mockUsersService
+          useValue: mockUsersService,
         },
         {
           provide: USER_REPOSITORY_TOKEN,
@@ -49,14 +48,16 @@ describe('AuthController', () => {
             findOne: jest.fn(),
           },
         },
-        ConfigService
+        ConfigService,
       ],
       imports: [
         JwtModule.registerAsync({
           imports: [ConfigModule.forRoot()],
           useFactory: async (configService: ConfigService) => ({
             secret: configService.get<string>('JWT_SECRET'),
-            signOptions: { expiresIn: '1h' }
+            signOptions: {
+              expiresIn: configService.get<string>('JWT_EXPIRATES_IN'),
+            },
           }),
           inject: [ConfigService],
         }),
@@ -65,7 +66,6 @@ describe('AuthController', () => {
 
     authController = module.get<AuthController>(AuthController);
     authService = module.get<AuthService>(AuthService);
-    usersService = module.get<UsersService>(UsersService);
   });
 
   afterEach(() => {
@@ -88,7 +88,9 @@ describe('AuthController', () => {
         role: UserRole.REGULAR,
       };
 
-      jest.spyOn(authService, 'registerUser').mockResolvedValueOnce(registeredUser);
+      jest
+        .spyOn(authService, 'registerUser')
+        .mockResolvedValueOnce(registeredUser);
 
       const result = await authController.register(newUser);
       expect(result).toEqual(registeredUser);
@@ -100,7 +102,9 @@ describe('AuthController', () => {
         password: 'password123',
       };
 
-      await expect(authController.register(invalidUser)).rejects.toThrowError('Invalid user data');
+      await expect(authController.register(invalidUser)).rejects.toThrowError(
+        'Invalid user data',
+      );
     });
   });
 
@@ -134,7 +138,9 @@ describe('AuthController', () => {
 
       jest.spyOn(authService, 'validateUser').mockResolvedValueOnce(null);
 
-      await expect(authController.login(invalidCredentials)).rejects.toThrowError('Incorrect username or password');
+      await expect(
+        authController.login(invalidCredentials),
+      ).rejects.toThrowError('Incorrect username or password');
     });
   });
 });

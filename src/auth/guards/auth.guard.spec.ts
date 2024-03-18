@@ -9,7 +9,6 @@ import { PUBLIC_KEY } from '../../constants/key-decorator';
 
 describe('AuthGuard', () => {
   let guard: AuthGuard;
-  let usersService: UsersService;
   let reflector: Reflector;
 
   const USER_REPOSITORY_TOKEN = getRepositoryToken(User);
@@ -26,13 +25,12 @@ describe('AuthGuard', () => {
             create: jest.fn(),
             save: jest.fn(),
             findOne: jest.fn(),
-          }
-        }
+          },
+        },
       ],
     }).compile();
 
     guard = module.get<AuthGuard>(AuthGuard);
-    usersService = module.get<UsersService>(UsersService);
     reflector = module.get<Reflector>(Reflector);
   });
 
@@ -53,21 +51,28 @@ describe('AuthGuard', () => {
       const result = await guard.canActivate(contextMock);
 
       expect(result).toBeTruthy();
-      expect(reflectorSpy).toHaveBeenCalledWith(PUBLIC_KEY, contextMock.getHandler());
+      expect(reflectorSpy).toHaveBeenCalledWith(
+        PUBLIC_KEY,
+        contextMock.getHandler(),
+      );
     });
 
     it('should throw UnauthorizedException for protected routes with missing or invalid token', async () => {
       const reflectorSpy = jest.spyOn(reflector, 'get').mockReturnValue(false);
-  
+
       const contextMock: any = {
         switchToHttp: jest.fn().mockReturnThis(),
         getRequest: jest.fn().mockReturnValue({ headers: {} }),
         getHandler: jest.fn(),
       };
-  
-      await expect(guard.canActivate(contextMock)).rejects.toThrowError(UnauthorizedException);
-      expect(reflectorSpy).toHaveBeenCalledWith(PUBLIC_KEY, contextMock.getHandler());
-    });
 
+      await expect(guard.canActivate(contextMock)).rejects.toThrowError(
+        UnauthorizedException,
+      );
+      expect(reflectorSpy).toHaveBeenCalledWith(
+        PUBLIC_KEY,
+        contextMock.getHandler(),
+      );
+    });
   });
 });

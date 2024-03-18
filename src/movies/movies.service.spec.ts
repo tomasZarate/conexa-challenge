@@ -9,7 +9,7 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 
 describe('MoviesService', () => {
   let service: MoviesService;
-  let repository: Repository<Movie>
+  let repository: Repository<Movie>;
 
   const nowDate = new Date();
   const MOVIE_REPOSITORY_TOKEN = getRepositoryToken(Movie);
@@ -46,40 +46,42 @@ describe('MoviesService', () => {
 
   describe('findAll', () => {
     it('should return an array of movies', async () => {
-
-      const movies = [{
-        id: 1,
-        director: 'George Lucas',
-        episode_id: 4,
-        opening_crawl: 'It is a period of civil war.....',
-        planets: ['Tatooine', 'Alderaan'],
-        producer: 'Gary Kurtz, Rick McCallum',
-        release_date: '1977-05-25',
-        characters: ['Luke Skywalker'],
-        species: ['Human', 'Wookiee'],
-        starships: ['Millennium Falcon'],
-        title: 'Star Wars: Episode IV - A New Hope',
-        url: 'https://swapi.dev/api/films/1/',
-        vehicles: ['AT-ST Walker'],
-        created_at: nowDate,
-        edited_at: nowDate
-      }, {
-        id: 2,
-        director: 'George Lucas',
-        episode_id: 4,
-        opening_crawl: 'It is a period of civil war.....',
-        planets: ['Tatooine', 'Alderaan'],
-        producer: 'Gary Kurtz, Rick McCallum',
-        release_date: '1977-05-25',
-        characters: ['Luke Skywalker'],
-        species: ['Human', 'Wookiee'],
-        starships: ['Millennium Falcon'],
-        title: 'Star Wars: Episode IV - A New Hope',
-        url: 'https://swapi.dev/api/films/1/',
-        vehicles: ['AT-ST Walker'],
-        created_at: nowDate,
-        edited_at: nowDate
-      }];
+      const movies = [
+        {
+          id: 1,
+          director: 'George Lucas',
+          episode_id: 4,
+          opening_crawl: 'It is a period of civil war.....',
+          planets: ['Tatooine', 'Alderaan'],
+          producer: 'Gary Kurtz, Rick McCallum',
+          release_date: '1977-05-25',
+          characters: ['Luke Skywalker'],
+          species: ['Human', 'Wookiee'],
+          starships: ['Millennium Falcon'],
+          title: 'Star Wars: Episode IV - A New Hope',
+          url: 'https://swapi.dev/api/films/1/',
+          vehicles: ['AT-ST Walker'],
+          created_at: nowDate,
+          edited_at: nowDate,
+        },
+        {
+          id: 2,
+          director: 'George Lucas',
+          episode_id: 4,
+          opening_crawl: 'It is a period of civil war.....',
+          planets: ['Tatooine', 'Alderaan'],
+          producer: 'Gary Kurtz, Rick McCallum',
+          release_date: '1977-05-25',
+          characters: ['Luke Skywalker'],
+          species: ['Human', 'Wookiee'],
+          starships: ['Millennium Falcon'],
+          title: 'Star Wars: Episode IV - A New Hope',
+          url: 'https://swapi.dev/api/films/1/',
+          vehicles: ['AT-ST Walker'],
+          created_at: nowDate,
+          edited_at: nowDate,
+        },
+      ];
       jest.spyOn(repository, 'find').mockResolvedValueOnce(movies);
 
       expect(await service.findAll()).toEqual(movies);
@@ -109,7 +111,7 @@ describe('MoviesService', () => {
         url: 'https://swapi.dev/api/films/1/',
         vehicles: ['AT-ST Walker'],
         created_at: nowDate,
-        edited_at: nowDate
+        edited_at: nowDate,
       };
       jest.spyOn(repository, 'findOne').mockResolvedValueOnce(movie);
 
@@ -154,10 +156,9 @@ describe('MoviesService', () => {
       url: 'https://swapi.dev/api/films/1/',
       vehicles: ['AT-ST Walker'],
       created_at: nowDate,
-      edited_at: nowDate
+      edited_at: nowDate,
     };
     it('should create a new movie', async () => {
-
       jest.spyOn(repository, 'create').mockReturnValueOnce(createdMovie);
       jest.spyOn(repository, 'save').mockResolvedValueOnce(createdMovie);
 
@@ -165,7 +166,10 @@ describe('MoviesService', () => {
     });
 
     it('should throw an error if movie creation fails', async () => {
-      const error = new Error('Failed to create movie');
+      const error = new HttpException(
+        'Failed to create movie',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
 
       jest.spyOn(repository, 'create').mockReturnValueOnce(createdMovie);
       jest.spyOn(repository, 'save').mockRejectedValueOnce(error);
@@ -175,7 +179,6 @@ describe('MoviesService', () => {
   });
 
   describe('updateMovie', () => {
-
     const existingMovie: Movie = {
       id: 1,
       director: 'George Lucas',
@@ -191,7 +194,7 @@ describe('MoviesService', () => {
       url: 'https://swapi.dev/api/films/1/',
       vehicles: ['AT-ST Walker'],
       created_at: nowDate,
-      edited_at: nowDate
+      edited_at: nowDate,
     };
     it('should update an existing movie', async () => {
       const updatedMovieData: UpdateMovieDTO = { title: 'Updated Movie' };
@@ -200,18 +203,23 @@ describe('MoviesService', () => {
       jest.spyOn(repository, 'findOne').mockResolvedValueOnce(existingMovie);
       jest.spyOn(repository, 'update').mockResolvedValueOnce({} as any);
 
-      const result = await service.updateMovie(existingMovie.id, updatedMovieData);
+      const result = await service.updateMovie(
+        existingMovie.id,
+        updatedMovieData,
+      );
 
       expect(result).toEqual(updatedMovie);
     });
 
     it('should throw an error if movie is not found', async () => {
       const updatedMovieData: UpdateMovieDTO = { opening_crawl: 'Lorem Ipsum' };
-      const error = new Error('Movie not found');
+      const error = new HttpException('Movie not found', HttpStatus.NOT_FOUND);
 
       jest.spyOn(repository, 'findOne').mockResolvedValueOnce(null);
 
-      await expect(service.updateMovie(1, updatedMovieData)).rejects.toThrowError(error);
+      await expect(
+        service.updateMovie(1, updatedMovieData),
+      ).rejects.toThrowError(error);
     });
   });
 
@@ -233,12 +241,14 @@ describe('MoviesService', () => {
         url: 'https://swapi.dev/api/films/1/',
         vehicles: ['AT-ST Walker'],
         created_at: nowDate,
-        edited_at: nowDate
+        edited_at: nowDate,
       };
 
       jest.spyOn(repository, 'findOne').mockResolvedValueOnce(movie);
 
-      jest.spyOn(repository, 'delete').mockResolvedValueOnce({ affected: 1 } as DeleteResult);
+      jest
+        .spyOn(repository, 'delete')
+        .mockResolvedValueOnce({ affected: 1 } as DeleteResult);
 
       const result = await service.deleteMovie(movieId);
       expect(result).toEqual({ affected: 1 });
@@ -249,8 +259,9 @@ describe('MoviesService', () => {
 
       jest.spyOn(repository, 'findOne').mockResolvedValueOnce(null);
 
-      await expect(service.deleteMovie(movieId)).rejects.toThrowError(new HttpException('Movie not found', HttpStatus.NOT_FOUND));
+      await expect(service.deleteMovie(movieId)).rejects.toThrowError(
+        new HttpException('Movie not found', HttpStatus.NOT_FOUND),
+      );
     });
   });
-
 });

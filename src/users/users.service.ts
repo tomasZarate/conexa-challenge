@@ -7,45 +7,51 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
+  constructor(
+    @InjectRepository(User) private readonly usersRepository: Repository<User>,
+  ) {}
 
-    constructor(@InjectRepository(User) private readonly usersRepository: Repository<User>) { }
+  async createUser(createUserDto: CreateUserDTO): Promise<User> {
+    const existingUser = await this.usersRepository.findOne({
+      where: { username: createUserDto.username },
+    });
 
-    async createUser(createUserDto: CreateUserDTO): Promise<User> {
-        const existingUser = await this.usersRepository.findOne({
-            where: { username: createUserDto.username }
-        })
-
-        if (existingUser) {
-            throw new HttpException('User already exists', HttpStatus.CONFLICT)
-        }
-
-        const { password, ...userData } = createUserDto
-
-        const hashedPassword = await bcrypt.hash(password, 10)
-
-        const newUser = this.usersRepository.create({ ...userData, password: hashedPassword })
-
-        return this.usersRepository.save(newUser)
+    if (existingUser) {
+      throw new HttpException('User already exists', HttpStatus.CONFLICT);
     }
 
-    async findByUsername(username: string): Promise<User> {
+    const { password, ...userData } = createUserDto;
 
-        if (!username.length) {
-            return null;
-        }
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-        const user = await this.usersRepository.findOne({
-            where: { username },
-        });
+    const newUser = this.usersRepository.create({
+      ...userData,
+      password: hashedPassword,
+    });
 
-        return user;
+    return this.usersRepository.save(newUser);
+  }
+
+  async findByUsername(username: string): Promise<User> {
+    if (!username.length) {
+      return null;
     }
 
-    async findUserById(id: number): Promise<User> {
-        return this.usersRepository.findOne({where: {id}})
-    }
+    const user = await this.usersRepository.findOne({
+      where: { username },
+    });
 
-    validatePassword(inputPassword: string, hashedPassword: string): Promise<Boolean> {
-        return bcrypt.compare(inputPassword, hashedPassword)
-    }
+    return user;
+  }
+
+  async findUserById(id: number): Promise<User> {
+    return this.usersRepository.findOne({ where: { id } });
+  }
+
+  validatePassword(
+    inputPassword: string,
+    hashedPassword: string,
+  ): Promise<boolean> {
+    return bcrypt.compare(inputPassword, hashedPassword);
+  }
 }

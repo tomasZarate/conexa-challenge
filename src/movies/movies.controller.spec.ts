@@ -34,10 +34,9 @@ describe('MoviesController', () => {
             create: jest.fn(),
             save: jest.fn(),
             findOne: jest.fn(),
-          }
-        }
+          },
+        },
       ],
-
     }).compile();
 
     controller = module.get<MoviesController>(MoviesController);
@@ -63,7 +62,7 @@ describe('MoviesController', () => {
     url: 'https://swapi.dev/api/films/1/',
     vehicles: ['AT-ST Walker'],
     created_at: nowDate,
-    edited_at: nowDate
+    edited_at: nowDate,
   };
 
   describe('findById', () => {
@@ -124,12 +123,17 @@ describe('MoviesController', () => {
   describe('updateMovie', () => {
     it('should update an existing movie', async () => {
       const movieId = 1;
-      const updatingMovie: UpdateMovieDTO = { title: 'Updated Movie', director: 'Updated Director' };
+      const updatingMovie: UpdateMovieDTO = {
+        title: 'Updated Movie',
+        director: 'Updated Director',
+      };
       const updatedMovie: Movie = { id: movieId, ...movie, ...updatingMovie };
 
       jest.spyOn(service, 'updateMovie').mockResolvedValueOnce(updatedMovie);
 
-      expect(await controller.updateMovie(movieId, updatingMovie)).toBe(updatedMovie);
+      expect(await controller.updateMovie(movieId, updatingMovie)).toBe(
+        updatedMovie,
+      );
     });
   });
 
@@ -146,9 +150,15 @@ describe('MoviesController', () => {
     it('should throw an error if movie is not found', async () => {
       const movieId = 1;
 
-      jest.spyOn(service, 'deleteMovie').mockRejectedValueOnce(new HttpException('Movie not found', HttpStatus.NOT_FOUND));
+      jest
+        .spyOn(service, 'deleteMovie')
+        .mockRejectedValueOnce(
+          new HttpException('Movie not found', HttpStatus.NOT_FOUND),
+        );
 
-      await expect(controller.deleteMovie(movieId)).rejects.toThrowError(new HttpException('Movie not found', HttpStatus.NOT_FOUND));
+      await expect(controller.deleteMovie(movieId)).rejects.toThrowError(
+        new HttpException('Movie not found', HttpStatus.NOT_FOUND),
+      );
     });
   });
 });

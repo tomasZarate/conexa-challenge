@@ -6,17 +6,19 @@ import { CreateUserDTO } from '../users/dtos/create-user.dto';
 import { User } from '../users/entities/user.entity';
 import { UserRole } from '../constants/roles.enum';
 import { ConfigService } from '@nestjs/config';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 describe('AuthService', () => {
   let authService: AuthService;
   let usersService: UsersService;
   let jwtService: JwtService;
+  let configService: ConfigService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,
-        ConfigService,        
+        ConfigService,
         {
           provide: UsersService,
           useValue: {
@@ -37,6 +39,7 @@ describe('AuthService', () => {
     authService = module.get<AuthService>(AuthService);
     usersService = module.get<UsersService>(UsersService);
     jwtService = module.get<JwtService>(JwtService);
+    configService = module.get<ConfigService>(ConfigService);
   });
 
   it('should be defined', () => {
@@ -72,10 +75,15 @@ describe('AuthService', () => {
         password: 'invalidpassword123',
       };
 
-      jest.spyOn(usersService, 'createUser').mockRejectedValue(new Error());
+      const error = new HttpException(
+        'Invalid user data',
+        HttpStatus.BAD_REQUEST,
+      );
+
+      jest.spyOn(usersService, 'createUser').mockRejectedValue(error);
 
       await expect(authService.registerUser(newUser)).rejects.toThrowError(
-        'Invalid user data',
+        error,
       );
     });
   });
@@ -103,12 +111,14 @@ describe('AuthService', () => {
       const result = await authService.generateToken(user);
 
       expect(usersService.findByUsername).toHaveBeenCalledWith(user.username);
-      expect(jwtService.sign).toHaveBeenCalledWith(tokenPayload, { secret: process.env.JWT_SECRET, expiresIn: '1h' });
+      expect(jwtService.sign).toHaveBeenCalledWith(tokenPayload, {
+        secret: configService.get('JWT_SECRET'),
+        expiresIn: configService.get('JWT_EXPIRATES_IN'),
+      });
       expect(result).toEqual({
         access_token: mockToken,
         user: user,
       });
     });
   });
-
 });

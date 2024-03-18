@@ -16,16 +16,18 @@ import { PassportModule } from '@nestjs/passport';
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
-        signOptions: { expiresIn: '1h' }
+        signOptions: {
+          expiresIn: configService.get<string>('JWT_EXPIRATES_IN'),
+        },
       }),
       inject: [ConfigService],
     }),
     TypeOrmModule.forFeature([User]),
     ConfigModule,
-    UsersModule
+    UsersModule,
   ],
   providers: [AuthService, UsersService],
   controllers: [AuthController],
   exports: [PassportModule, JwtModule],
 })
-export class AuthModule { }
+export class AuthModule {}
