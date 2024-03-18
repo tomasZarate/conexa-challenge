@@ -7,6 +7,7 @@ import { UsersService } from './users/users.service';
 import { UsersModule } from './users/users.module';
 import { AuthService } from './auth/auth.service';
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
+import { MoviesModule } from './movies/movies.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { APP_FILTER, APP_PIPE } from '@nestjs/core';
     }),
     AuthModule,
     UsersModule,
+    MoviesModule,
   ],
   controllers: [],
   providers: [UsersService, AuthService,

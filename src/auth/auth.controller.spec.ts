@@ -5,7 +5,7 @@ import { CreateUserDTO } from '../users/dtos/create-user.dto';
 import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { JwtModule, JwtService } from '@nestjs/jwt';
+import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SignInDTO } from './dtos/signin.dto';
 
