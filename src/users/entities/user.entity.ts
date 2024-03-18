@@ -2,7 +2,7 @@ import { Exclude } from "class-transformer";
 import { UserRole } from "../../constants/roles.enum";
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-@Entity()
+@Entity({ name: "users" })
 export class User {
     @PrimaryGeneratedColumn()
     id: number
