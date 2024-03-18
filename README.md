@@ -24,13 +24,30 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+API de gestión de películas para la convocatoria Back-end Developer (Nestjs/TS) de Conexa
+Los endpoints de la API se encuentran documentados con la librería swagger en /docs
 
 ## Installation
+
+Para iniciar una instancia de base de datos local de postgres y la interfaz pgadmin
+```bash
+$ docker-compose up
+```
 
 ```bash
 $ npm install
 ```
+Para la creación de una base de datos se provee pgadmin accesible a través de localhost
+Se deben configurar las variables de entorno para el 
+
+En caso que no se desee crear tablas manualmente, se proveen migraciones para la creación de las tablas de usuarios y peliculas
+
+```bash
+$ npm run build
+
+$ npm run migration:run
+```
+
 
 ## Running the app
 
@@ -50,9 +67,6 @@ $ npm run start:prod
 ```bash
 # unit tests
 $ npm run test
-
-# e2e tests
-$ npm run test:e2e
 
 # test coverage
 $ npm run test:cov

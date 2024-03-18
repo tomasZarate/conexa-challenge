@@ -11,7 +11,7 @@ export class MoviesService {
     constructor(@InjectRepository(Movie) private readonly moviesRepository: Repository<Movie>) { }
 
     async findAll(): Promise<Movie[]> {
-        return this.moviesRepository.find();
+        return this.moviesRepository.find({ select: ["id", "title"] });
     }
 
     async findById(id: number): Promise<Movie> {

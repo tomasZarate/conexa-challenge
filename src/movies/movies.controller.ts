@@ -15,13 +15,13 @@ import axios from 'axios';
 @ApiBearerAuth()
 @ApiTags('movies')
 @Controller('movies')
-@UseGuards(AuthGuard, RolesGuard)
 export class MoviesController {
 
     constructor(private moviesService: MoviesService) { }
 
     @Get(':id')
     @Roles(UserRole.REGULAR)
+    @UseGuards(AuthGuard, RolesGuard)
     @ApiOperation({ summary: 'Get movie by id' })
     async findById(@Param('id') id: number): Promise<Movie> {
         return this.moviesService.findById(id);
@@ -37,6 +37,7 @@ export class MoviesController {
     @Roles(UserRole.ADMIN)
     @ApiBody({ type: CreateMovieDTO })
     @ApiOperation({ summary: 'Create a movie' })
+    @UseGuards(AuthGuard, RolesGuard)
     async createMovie(@Body() newMovie: CreateMovieDTO): Promise<Movie> {
         return this.moviesService.createMovie(newMovie);
     }
@@ -45,6 +46,7 @@ export class MoviesController {
     @Roles(UserRole.ADMIN)
     @ApiBody({ type: UpdateMovieDTO })
     @ApiOperation({ summary: 'Update a movie' })
+    @UseGuards(AuthGuard, RolesGuard)
     async updateMovie(@Param('id') id: number, @Body() updatingMovie: UpdateMovieDTO): Promise<Movie> {
         return this.moviesService.updateMovie(id, updatingMovie);
     }
@@ -52,6 +54,7 @@ export class MoviesController {
     @Delete(':id')
     @Roles(UserRole.ADMIN)
     @ApiOperation({ summary: 'Delete movie' })
+    @UseGuards(AuthGuard, RolesGuard)
     async deleteMovie(@Param('id') id: number): Promise<DeleteResult> {
         return this.moviesService.deleteMovie(id)
     }
@@ -60,6 +63,7 @@ export class MoviesController {
     @Roles(UserRole.ADMIN)
     @ApiBody({ type: ImportMovieDto })
     @ApiOperation({ summary: 'Import movie from SWAPI' })
+    @UseGuards(AuthGuard, RolesGuard)
     async importMovie(@Body() toImportMovie: ImportMovieDto): Promise<Movie> {
         const url = toImportMovie.url;
 
