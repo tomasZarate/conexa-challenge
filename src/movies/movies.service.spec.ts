@@ -6,6 +6,7 @@ import { Movie } from './entities/movie.entity';
 import { DeleteResult, Repository } from 'typeorm';
 import { UpdateMovieDTO } from './dtos/update-movie.dto';
 import { HttpException, HttpStatus } from '@nestjs/common';
+import { createMovieExample } from '../docs/examples/movies.examples';
 
 describe('MoviesService', () => {
   let service: MoviesService;
@@ -13,6 +14,7 @@ describe('MoviesService', () => {
 
   const nowDate = new Date();
   const MOVIE_REPOSITORY_TOKEN = getRepositoryToken(Movie);
+  const movieExample: CreateMovieDTO = createMovieExample
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -49,35 +51,13 @@ describe('MoviesService', () => {
       const movies = [
         {
           id: 1,
-          director: 'George Lucas',
-          episode_id: 4,
-          opening_crawl: 'It is a period of civil war.....',
-          planets: ['Tatooine', 'Alderaan'],
-          producer: 'Gary Kurtz, Rick McCallum',
-          release_date: '1977-05-25',
-          characters: ['Luke Skywalker'],
-          species: ['Human', 'Wookiee'],
-          starships: ['Millennium Falcon'],
-          title: 'Star Wars: Episode IV - A New Hope',
-          url: 'https://swapi.dev/api/films/1/',
-          vehicles: ['AT-ST Walker'],
+          ...movieExample,
           created_at: nowDate,
           edited_at: nowDate,
         },
         {
           id: 2,
-          director: 'George Lucas',
-          episode_id: 4,
-          opening_crawl: 'It is a period of civil war.....',
-          planets: ['Tatooine', 'Alderaan'],
-          producer: 'Gary Kurtz, Rick McCallum',
-          release_date: '1977-05-25',
-          characters: ['Luke Skywalker'],
-          species: ['Human', 'Wookiee'],
-          starships: ['Millennium Falcon'],
-          title: 'Star Wars: Episode IV - A New Hope',
-          url: 'https://swapi.dev/api/films/1/',
-          vehicles: ['AT-ST Walker'],
+          ...movieExample,
           created_at: nowDate,
           edited_at: nowDate,
         },
@@ -98,18 +78,7 @@ describe('MoviesService', () => {
     it('should return the movie with the provided id', async () => {
       const movie = {
         id: 1,
-        director: 'George Lucas',
-        episode_id: 4,
-        opening_crawl: 'It is a period of civil war.....',
-        planets: ['Tatooine', 'Alderaan'],
-        producer: 'Gary Kurtz, Rick McCallum',
-        release_date: '1977-05-25',
-        characters: ['Luke Skywalker'],
-        species: ['Human', 'Wookiee'],
-        starships: ['Millennium Falcon'],
-        title: 'Star Wars: Episode IV - A New Hope',
-        url: 'https://swapi.dev/api/films/1/',
-        vehicles: ['AT-ST Walker'],
+        ...createMovieExample,
         created_at: nowDate,
         edited_at: nowDate,
       };
@@ -126,35 +95,11 @@ describe('MoviesService', () => {
   });
 
   describe('createMovie', () => {
-    const newMovie: CreateMovieDTO = {
-      director: 'George Lucas',
-      episode_id: 4,
-      opening_crawl: 'It is a period of civil war.....',
-      planets: ['Tatooine', 'Alderaan'],
-      producer: 'Gary Kurtz, Rick McCallum',
-      release_date: '1977-05-25',
-      characters: ['Luke Skywalker'],
-      species: ['Human', 'Wookiee'],
-      starships: ['Millennium Falcon'],
-      title: 'Star Wars: Episode IV - A New Hope',
-      url: 'https://swapi.dev/api/films/1/',
-      vehicles: ['AT-ST Walker'],
-    };
+    const newMovie: CreateMovieDTO = movieExample;
 
     const createdMovie = {
       id: 1,
-      director: 'George Lucas',
-      episode_id: 4,
-      opening_crawl: 'It is a period of civil war.....',
-      planets: ['Tatooine', 'Alderaan'],
-      producer: 'Gary Kurtz, Rick McCallum',
-      release_date: '1977-05-25',
-      characters: ['Luke Skywalker'],
-      species: ['Human', 'Wookiee'],
-      starships: ['Millennium Falcon'],
-      title: 'Star Wars: Episode IV - A New Hope',
-      url: 'https://swapi.dev/api/films/1/',
-      vehicles: ['AT-ST Walker'],
+      ...newMovie,
       created_at: nowDate,
       edited_at: nowDate,
     };
@@ -181,18 +126,7 @@ describe('MoviesService', () => {
   describe('updateMovie', () => {
     const existingMovie: Movie = {
       id: 1,
-      director: 'George Lucas',
-      episode_id: 4,
-      opening_crawl: 'It is a period of civil war.....',
-      planets: ['Tatooine', 'Alderaan'],
-      producer: 'Gary Kurtz, Rick McCallum',
-      release_date: '1977-05-25',
-      characters: ['Luke Skywalker'],
-      species: ['Human', 'Wookiee'],
-      starships: ['Millennium Falcon'],
-      title: 'Star Wars',
-      url: 'https://swapi.dev/api/films/1/',
-      vehicles: ['AT-ST Walker'],
+      ...movieExample,
       created_at: nowDate,
       edited_at: nowDate,
     };
@@ -228,18 +162,7 @@ describe('MoviesService', () => {
       const movieId = 1;
       const movie: Movie = {
         id: 1,
-        director: 'George Lucas',
-        episode_id: 4,
-        opening_crawl: 'It is a period of civil war.....',
-        planets: ['Tatooine', 'Alderaan'],
-        producer: 'Gary Kurtz, Rick McCallum',
-        release_date: '1977-05-25',
-        characters: ['Luke Skywalker'],
-        species: ['Human', 'Wookiee'],
-        starships: ['Millennium Falcon'],
-        title: 'Star Wars',
-        url: 'https://swapi.dev/api/films/1/',
-        vehicles: ['AT-ST Walker'],
+        ...movieExample,
         created_at: nowDate,
         edited_at: nowDate,
       };

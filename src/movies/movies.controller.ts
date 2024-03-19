@@ -16,28 +16,31 @@ import { MoviesService } from './movies.service';
 import { Movie } from './entities/movie.entity';
 import { DeleteResult } from 'typeorm';
 import { AuthGuard } from '../auth/guards/auth.guard';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiAcceptedResponse, ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { UserRole } from '../constants/roles.enum';
 import { ImportMovieDto } from './dtos/import-movie.dto';
 import axios from 'axios';
+import { createMovieExample, updateMovieExample } from '../docs/examples/movies.examples';
 
 @ApiBearerAuth()
 @ApiTags('movies')
 @Controller('movies')
 export class MoviesController {
-  constructor(private moviesService: MoviesService) {}
+  constructor(private moviesService: MoviesService) { }
 
   @Get(':id')
   @Roles(UserRole.REGULAR)
   @UseGuards(AuthGuard, RolesGuard)
+  @ApiAcceptedResponse({ type: Movie })
   @ApiOperation({ summary: 'Get movie by id' })
   async findById(@Param('id') id: number): Promise<Movie> {
     return this.moviesService.findById(id);
   }
 
   @Get()
+  @ApiAcceptedResponse({ type: [Movie] })
   @ApiOperation({ summary: 'Get all movies' })
   async findAll(): Promise<Movie[]> {
     return this.moviesService.findAll();
@@ -45,7 +48,15 @@ export class MoviesController {
 
   @Post()
   @Roles(UserRole.ADMIN)
-  @ApiBody({ type: CreateMovieDTO })
+  @ApiBody({
+    type: CreateMovieDTO, examples: {
+      'movieExample': {
+        value: createMovieExample,
+        summary: 'Example movie expected'
+      }
+    }
+  })
+  @ApiAcceptedResponse({ type: Movie })
   @ApiOperation({ summary: 'Create a movie' })
   @UseGuards(AuthGuard, RolesGuard)
   async createMovie(@Body() newMovie: CreateMovieDTO): Promise<Movie> {
@@ -54,7 +65,15 @@ export class MoviesController {
 
   @Patch(':id')
   @Roles(UserRole.ADMIN)
-  @ApiBody({ type: UpdateMovieDTO })
+  @ApiBody({
+    type: UpdateMovieDTO, examples: {
+      'movieExample': {
+        value: updateMovieExample,
+        summary: 'Example movie expected'
+      }
+    }
+  })
+  @ApiAcceptedResponse({ type: Movie })
   @ApiOperation({ summary: 'Update a movie' })
   @UseGuards(AuthGuard, RolesGuard)
   async updateMovie(
