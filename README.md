@@ -32,6 +32,14 @@ https://conexa-challenge-tzarate.up.railway.app
 Los endpoints de la API se encuentran documentados con la librería swagger y es accesible a través de:
 https://conexa-challenge-tzarate.up.railway.app/docs
 
+La base de datos provista posee un usuario precargado con el rol de ADMIN cuyas credenciales son:
+```
+{
+  "username": "admin",
+  "password": "admin12345"
+}
+```
+
 Para resolver el challenge se utilizó el framework backend NestJs para el lenguaje Typescript, con PostgreSQL como base de datos.
 
 ## Installation
