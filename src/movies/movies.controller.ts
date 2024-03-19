@@ -16,19 +16,28 @@ import { MoviesService } from './movies.service';
 import { Movie } from './entities/movie.entity';
 import { DeleteResult } from 'typeorm';
 import { AuthGuard } from '../auth/guards/auth.guard';
-import { ApiAcceptedResponse, ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiAcceptedResponse,
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { UserRole } from '../constants/roles.enum';
 import { ImportMovieDto } from './dtos/import-movie.dto';
 import axios from 'axios';
-import { createMovieExample, updateMovieExample } from '../docs/examples/movies.examples';
+import {
+  createMovieExample,
+  updateMovieExample,
+} from '../docs/examples/movies.examples';
 
 @ApiBearerAuth()
 @ApiTags('movies')
 @Controller('movies')
 export class MoviesController {
-  constructor(private moviesService: MoviesService) { }
+  constructor(private moviesService: MoviesService) {}
 
   @Get(':id')
   @Roles(UserRole.REGULAR)
@@ -49,12 +58,13 @@ export class MoviesController {
   @Post()
   @Roles(UserRole.ADMIN)
   @ApiBody({
-    type: CreateMovieDTO, examples: {
-      'movieExample': {
+    type: CreateMovieDTO,
+    examples: {
+      movieExample: {
         value: createMovieExample,
-        summary: 'Example movie expected'
-      }
-    }
+        summary: 'Example movie expected',
+      },
+    },
   })
   @ApiAcceptedResponse({ type: Movie })
   @ApiOperation({ summary: 'Create a movie' })
@@ -66,12 +76,13 @@ export class MoviesController {
   @Patch(':id')
   @Roles(UserRole.ADMIN)
   @ApiBody({
-    type: UpdateMovieDTO, examples: {
-      'movieExample': {
+    type: UpdateMovieDTO,
+    examples: {
+      movieExample: {
         value: updateMovieExample,
-        summary: 'Example movie expected'
-      }
-    }
+        summary: 'Example movie expected',
+      },
+    },
   })
   @ApiAcceptedResponse({ type: Movie })
   @ApiOperation({ summary: 'Update a movie' })
@@ -93,7 +104,15 @@ export class MoviesController {
 
   @Post('/import')
   @Roles(UserRole.ADMIN)
-  @ApiBody({ type: ImportMovieDto })
+  @ApiBody({
+    type: ImportMovieDto,
+    examples: {
+      url1: {
+        value: { url: 'https://swapi.dev/api/films/1/' },
+        summary: 'Example user swapi url',
+      },
+    },
+  })
   @ApiOperation({ summary: 'Import movie from SWAPI' })
   @UseGuards(AuthGuard, RolesGuard)
   async importMovie(@Body() toImportMovie: ImportMovieDto): Promise<Movie> {

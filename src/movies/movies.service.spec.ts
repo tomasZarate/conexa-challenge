@@ -14,7 +14,7 @@ describe('MoviesService', () => {
 
   const nowDate = new Date();
   const MOVIE_REPOSITORY_TOKEN = getRepositoryToken(Movie);
-  const movieExample: CreateMovieDTO = createMovieExample
+  const movieExample: CreateMovieDTO = createMovieExample;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
