@@ -24,8 +24,15 @@
 
 ## Description
 
-API de gestión de películas para la convocatoria Back-end Developer (Nestjs/TS) de Conexa
-Los endpoints de la API se encuentran documentados con la librería swagger en /docs
+API de gestión de películas para la convocatoria Back-end Developer (Nestjs/TS) de Conexa.
+
+La API se encuentra desplegada en:
+https://conexa-challenge-tzarate.up.railway.app
+
+Los endpoints de la API se encuentran documentados con la librería swagger y es accesible a través de:
+https://conexa-challenge-tzarate.up.railway.app/docs
+
+Para resolver el challenge se utilizó el framework backend NestJs para el lenguaje Typescript, con PostgreSQL como base de datos.
 
 ## Installation
 
@@ -63,6 +70,7 @@ $ npm run start:prod
 ```
 
 ## Test
+El proyecto cuenta con tests de unidad para los servicios, controladores, y guards.
 
 ```bash
 # unit tests
